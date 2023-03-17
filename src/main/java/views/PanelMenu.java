@@ -23,7 +23,7 @@ public class PanelMenu extends JPanel{
     private ButtonMenu modifyProcess;
     private ButtonMenu destroyProcess;
     private ButtonMenu reports;
-    private ButtonMenu sendProcess;
+    private ButtonMenu sendProcess, viewManual;
     private ButtonMenu exit;
     private JLabel titleMenu;
     
@@ -72,6 +72,11 @@ public class PanelMenu extends JPanel{
         exit.addActionListener(listener);
         exit.setActionCommand("Salir");
         addComponent(exit, 0, 7);
+
+        viewManual = new ButtonMenu("Ver Manual");
+        viewManual.setForeground(Color.WHITE);
+        viewManual.setFont(ConstantsGUI.FONT_MENU_TITLE);
+        addComponent(viewManual, 0, 8);
     }
     
     public void addComponent(JComponent component, int x, int y){
