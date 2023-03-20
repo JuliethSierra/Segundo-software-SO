@@ -90,6 +90,7 @@ public class Presenter implements ActionListener{
                 break;
             case "Suspendidos":
                 this.showSuspendedProcessReport();
+                break;
             case "Atras":
                 this.changeToMainMenu();
                 break;

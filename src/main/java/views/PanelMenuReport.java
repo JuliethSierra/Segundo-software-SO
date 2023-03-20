@@ -19,7 +19,7 @@ import javax.swing.JPanel;
  */
 public class PanelMenuReport extends JPanel{
     
-    private ButtonMenu existingProcesses, readyReport, dispatchedReport, executionReport, expirationReport, blockReport, wakeReport, finishedReport, destroyedReport, back;
+    private ButtonMenu existingProcesses, readyReport, dispatchedReport, executionReport, expirationReport, blockReport, wakeReport, finishedReport, destroyedReport, suspendedReport, back;
     private JLabel titleMenuReports;
     
     public PanelMenuReport(ActionListener listener){
@@ -82,11 +82,16 @@ public class PanelMenuReport extends JPanel{
         destroyedReport.addActionListener(listener);
         destroyedReport.setActionCommand("Destruidos");
         addComponent(destroyedReport, 0, 10);
-        
+
+        suspendedReport = new ButtonMenu("Suspendidos");
+        suspendedReport.addActionListener(listener);
+        suspendedReport.setActionCommand("Suspendidos");
+        addComponent(suspendedReport, 0, 11);
+
         back = new ButtonMenu("Atrás");
         back.addActionListener(listener);
         back.setActionCommand("Atras");
-        addComponent(back, 0, 11);
+        addComponent(back, 0, 12);
         
     }
     
