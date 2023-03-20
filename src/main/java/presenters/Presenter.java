@@ -91,6 +91,8 @@ public class Presenter implements ActionListener{
             case "Suspendidos":
                 this.showSuspendedProcessReport();
                 break;
+            case "Reanudados":
+                this.showRestartedReportProcessReport();
             case "Atras":
                 this.changeToMainMenu();
                 break;
@@ -203,6 +205,10 @@ public class Presenter implements ActionListener{
 
     private void showSuspendedProcessReport(){
         viewManager.showSuspendedProcessReport(processManager.getListAsMatrixObject(processManager.getSuspendedList()));
+    }
+
+    private void showRestartedReportProcessReport(){
+
     }
     private void modifyProcess(){
         if(viewManager.getIndexDataProcess() == -1){
