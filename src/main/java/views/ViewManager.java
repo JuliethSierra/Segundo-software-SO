@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ViewManager extends JFrame{
 
-    private final Object[] HEADERS_TABLE = {"Nombre", "Tiempo", "Bloqueo"};
+    private final Object[] HEADERS_TABLE = ConstantsGUI.headers;
 
 
     private PanelMenu panelMenu;

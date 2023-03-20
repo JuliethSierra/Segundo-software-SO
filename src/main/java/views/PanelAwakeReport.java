@@ -20,9 +20,9 @@ public class PanelAwakeReport extends JPanel {
     private void initComponents(){
         setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         setBackground(Color.WHITE);
-        String[] headers  = {"Nombre", "Tiempo", "Bloqueo"};
+        String[] headers1  = ConstantsGUI.headers;
         modelTableReport = new DefaultTableModel();
-        modelTableReport.setColumnIdentifiers(headers);
+        modelTableReport.setColumnIdentifiers(headers1);
 
         tableProcessReport = new JTable();
         tableProcessReport.setModel(modelTableReport);
