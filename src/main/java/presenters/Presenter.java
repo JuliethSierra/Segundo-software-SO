@@ -93,6 +93,7 @@ public class Presenter implements ActionListener{
                 break;
             case "Reanudados":
                 this.showRestartedReportProcessReport();
+                break;
             case "Atras":
                 this.changeToMainMenu();
                 break;
@@ -208,7 +209,7 @@ public class Presenter implements ActionListener{
     }
 
     private void showRestartedReportProcessReport(){
-
+        viewManager.showRestartedReportProcessReport(processManager.getListAsMatrixObject(processManager.getRestartedList()));
     }
     private void modifyProcess(){
         if(viewManager.getIndexDataProcess() == -1){
