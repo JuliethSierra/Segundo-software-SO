@@ -36,6 +36,8 @@ public class ViewManager extends JFrame{
     private PanelCurrentProcess panelCurrentProcess;
 
     private PanelDestroyedReport panelDestroyedReport;
+
+    private PanelSuspendedReport panelSuspendedReport;
     
     public ViewManager(ActionListener listener){
         this.setLayout(new BorderLayout());
@@ -73,6 +75,7 @@ public class ViewManager extends JFrame{
         panelCompletedReport = new PanelCompletedReport();
         panelCurrentProcess = new PanelCurrentProcess();
         panelDestroyedReport = new PanelDestroyedReport();
+        panelSuspendedReport = new PanelSuspendedReport();
     }
 
 
@@ -210,6 +213,16 @@ public class ViewManager extends JFrame{
         SwingUtilities.updateComponentTreeUI(this);
     }
 
+    public void showSuspendedProcessReport(Object[][] suspendedList){
+        Object[][] newList =  this.parseValuesIsBlock(suspendedList);
+        DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
+        this.panelSuspendedReport.setTableProcess(defaultTableModel);
+        this.hideAllPanels();
+        this.add(this.panelSuspendedReport,BorderLayout.CENTER);
+        this.panelSuspendedReport.setVisible(true);
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+
     private void hideAllPanels(){
         this.panelTableProcess.setVisible(false);
         this.panelReadyReport.setVisible(false);
@@ -221,6 +234,7 @@ public class ViewManager extends JFrame{
         this.panelCompletedReport.setVisible(false);
         this.panelCurrentProcess.setVisible(false);
         this.panelDestroyedReport.setVisible(false);
+        this.panelSuspendedReport.setVisible(false);
         SwingUtilities.updateComponentTreeUI(this);
     }
     public void showModifyProcessPanel(){
