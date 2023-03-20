@@ -6,13 +6,14 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 
-public class PanelDispatchedReport extends JPanel {
+public class PanelRestartedReport extends JPanel {
 
     private DefaultTableModel modelTableReport;
     private JTable tableProcessReport;
     private JScrollPane scrollReport;
     private TableColumn columnReport;
-    public PanelDispatchedReport(){
+
+    public PanelRestartedReport(){
         initComponents();
         setVisible(true);
     }
@@ -38,14 +39,16 @@ public class PanelDispatchedReport extends JPanel {
 
         scrollReport = new JScrollPane(tableProcessReport);
         scrollReport.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.decode("#204051")),
-                "Procesos Despachados", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, ConstantsGUI.FONT_TABLE_HEADER, Color.decode("#204051")));
+                "Procesos Reanudados", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, ConstantsGUI.FONT_TABLE_HEADER, Color.decode("#204051")));
         scrollReport.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(scrollReport, BorderLayout.PAGE_END);
         setBorder(null);
+
     }
 
     public void setTableProcess(DefaultTableModel defaultTableModel){
         this.modelTableReport = defaultTableModel;
         this.tableProcessReport.setModel(defaultTableModel);
     }
+
 }

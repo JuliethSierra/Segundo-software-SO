@@ -15,7 +15,7 @@ public class ProcessManager {
 
     private final int PROCESS_TIME = 5;
 
-    private List<Process> currentList, queueList, readyList, dispatchList, executionList, finishedList, blockList, expirationList, wakeUpList, destroyedList, suspendedList;
+    private List<Process> currentList, queueList, readyList, dispatchList, executionList, finishedList, blockList, expirationList, wakeUpList, destroyedList, suspendedList, restartedList;
 
     public ProcessManager() {
         this.queueList = new ArrayList<Process>();
@@ -29,6 +29,7 @@ public class ProcessManager {
         this.wakeUpList = new ArrayList<Process>();
         this.destroyedList = new ArrayList<Process>();
         this.suspendedList = new ArrayList<Process>();
+        this.restartedList = new ArrayList<Process>();
 
     }
 
@@ -121,6 +122,7 @@ public class ProcessManager {
         this.wakeUpList.clear();
         this.destroyedList.clear();
         this.suspendedList.clear();
+        this.restartedList.clear();
     }
 
     private void loadToDispatchQueue(Process process) {
@@ -208,6 +210,10 @@ public class ProcessManager {
 
     public ArrayList<Process> getSuspendedList(){
         return (ArrayList<Process>) this.suspendedList;
+    }
+
+    public ArrayList<Process> getRestartedList(){
+        return (ArrayList<Process>) this.restartedList;
     }
 
     public void cleanQueueList(){

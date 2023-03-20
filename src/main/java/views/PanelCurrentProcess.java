@@ -20,7 +20,7 @@ public class PanelCurrentProcess extends JPanel {
     private void initComponents(){
         setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         setBackground(Color.WHITE);
-        String[] headers  = {"Nombre", "Tiempo", "Bloqueo"};
+        String[] headers  = ConstantsGUI.headers;
         modelTable = new DefaultTableModel();
         modelTable.setColumnIdentifiers(headers);
 
