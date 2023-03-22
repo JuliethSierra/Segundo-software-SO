@@ -73,9 +73,9 @@ public class PanelMenu extends JPanel{
         exit.setActionCommand("Salir");
         addComponent(exit, 0, 7);
 
-        viewManual = new ButtonMenu("Ver Manual");
-        viewManual.setForeground(Color.WHITE);
-        viewManual.setFont(ConstantsGUI.FONT_MENU_TITLE);
+        viewManual = new ButtonMenu("Manual de usuario");
+        viewManual.addActionListener(listener);
+        viewManual.setActionCommand("ManualUsuario");
         addComponent(viewManual, 0, 8);
     }
     

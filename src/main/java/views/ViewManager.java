@@ -235,6 +235,7 @@ public class ViewManager extends JFrame{
         this.panelRestartedReport.setVisible(true);
         SwingUtilities.updateComponentTreeUI(this);
     }
+
     private void hideAllPanels(){
         this.panelTableProcess.setVisible(false);
         this.panelReadyReport.setVisible(false);
