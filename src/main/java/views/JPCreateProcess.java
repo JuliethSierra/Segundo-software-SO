@@ -22,9 +22,8 @@ import static presenters.Presenter.main;
  */
 public class JPCreateProcess extends JDialog {
     private ButtonActions create, cancel;
-    private JTextField inputNameProcess, inputPriority;
+    private JTextField inputNameProcess, inputPriority, inputTimeProcess;
     private JLabel nameProcess, timeProcess, blockProcess, priorityProcess, suspendedProcess;
-    private JSpinner inputTimeProcess;
     private JRadioButton yesButton, noButton, yesButtonSuspended, noButtonSuspended;
     private ButtonGroup groupRadioButton, groupRadioButtonSuspended;
     private JPanel panelGroup;
@@ -58,14 +57,12 @@ public class JPCreateProcess extends JDialog {
         timeProcess = new JLabel("Tiempo");
         timeProcess.setFont(ConstantsGUI.FONT_TITLE_INPUTS);
         addComponent(timeProcess, 0, 1);
-        
-        inputTimeProcess = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 5));
-        ((DefaultFormatter) ((JSpinner.NumberEditor) inputTimeProcess.getEditor()).getTextField().getFormatter()).setAllowsInvalid(false);
-        inputTimeProcess.setBackground(Color.decode("#f2e9e4"));
+
+        inputTimeProcess = new JTextField(10);
+        inputTimeProcess.setSize(100,50);
+        inputTimeProcess.setPreferredSize(new Dimension(100,30));
+        inputTimeProcess.setBackground(Color.WHITE);
         inputTimeProcess.setFont(ConstantsGUI.FONT_INPUTS);
-        inputTimeProcess.setForeground(Color.WHITE);  
-        inputTimeProcess.setSize(30,50);
-        inputTimeProcess.setPreferredSize(new Dimension(185,30));
         addComponent(inputTimeProcess, 1, 1);
 
         priorityProcess = new JLabel("Prioridad");
@@ -153,8 +150,14 @@ public class JPCreateProcess extends JDialog {
         return inputNameProcess.getText();
     }
 
-    public Object getTimeProcess(){
-        return inputTimeProcess.getValue();
+    public int getTimeProcess(){
+        int timeProcess = 0;
+        try {
+            timeProcess = Integer.parseInt(this.inputTimeProcess.getText());
+        }catch (NumberFormatException numberFormatException){
+            System.out.println("Error");
+        }
+        return timeProcess;
     }
 
     public boolean getIsBlocked(){
@@ -177,7 +180,7 @@ public class JPCreateProcess extends JDialog {
 
     public void cleanFields(){
         this.inputNameProcess.setText("");
-        this.inputTimeProcess.setValue(0);
+        this.inputTimeProcess.setText("");
         this.yesButton.setSelected(true);
         this.inputPriority.setText("");
         this.yesButtonSuspended.setSelected(true);
