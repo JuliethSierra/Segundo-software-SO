@@ -2,7 +2,9 @@ package persistence;
 
 import models.Process;
 
+import java.awt.*;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,5 +53,14 @@ public class PersistenceManager {
             block = "No";
         }
         return block;
+    }
+
+    public static void showManual(){
+        try {
+            File path = new File("src/main/java/resources/Manual de usuariodocx.docx");
+            Desktop.getDesktop().open(path);
+        }catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
