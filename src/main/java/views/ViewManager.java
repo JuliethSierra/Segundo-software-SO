@@ -110,9 +110,7 @@ public class ViewManager extends JFrame{
     }
 
     public double getTimeProcess(){
-        double timeProcess = 0;
-        timeProcess = Double.parseDouble(jpCreateProcess.getTimeProcess().toString());
-        return timeProcess;
+        return jpCreateProcess.getTimeProcess();
     }
 
     public boolean getIsBlocked(){
