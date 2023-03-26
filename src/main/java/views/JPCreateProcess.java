@@ -10,6 +10,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.math.BigInteger;
+import java.security.Key;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 
@@ -28,7 +31,7 @@ public class JPCreateProcess extends JDialog {
     private ButtonGroup groupRadioButton, groupRadioButtonSuspended;
     private JPanel panelGroup;
     
-    public JPCreateProcess(ActionListener listener){
+    public JPCreateProcess(ActionListener listener, KeyListener keyListener){
         this.setModal(true);
         this.setTitle("Crear Proceso");
         this.setLayout(new GridBagLayout());
@@ -39,10 +42,10 @@ public class JPCreateProcess extends JDialog {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.getContentPane().setBackground(Color.decode("#C9ADA7"));
-        initComponents(listener);
+        initComponents(listener, keyListener);
     }
     
-    private void initComponents(ActionListener listener){
+    private void initComponents(ActionListener listener, KeyListener keyListener){
         nameProcess = new JLabel("Nombre");
         nameProcess.setFont(ConstantsGUI.FONT_TITLE_INPUTS);
         addComponent(nameProcess, 0, 0);
@@ -59,6 +62,7 @@ public class JPCreateProcess extends JDialog {
         addComponent(timeProcess, 0, 1);
 
         inputTimeProcess = new JTextField(10);
+        inputTimeProcess.addKeyListener(keyListener);
         inputTimeProcess.setSize(100,50);
         inputTimeProcess.setPreferredSize(new Dimension(100,30));
         inputTimeProcess.setBackground(Color.WHITE);
@@ -150,12 +154,13 @@ public class JPCreateProcess extends JDialog {
         return inputNameProcess.getText();
     }
 
-    public int getTimeProcess(){
-        int timeProcess = 0;
+    public BigInteger getTimeProcess(){
+        BigInteger timeProcess = new BigInteger("0");
         try {
-            timeProcess = Integer.parseInt(this.inputTimeProcess.getText());
+            timeProcess = new BigInteger(this.inputTimeProcess.getText());
         }catch (NumberFormatException numberFormatException){
-            System.out.println("Error");
+            System.out.println("Error al convertir un número tan grande");
+
         }
         return timeProcess;
     }
@@ -164,12 +169,12 @@ public class JPCreateProcess extends JDialog {
         return yesButton.isSelected();
     }
 
-    public int getPriority(){
-        int priority = 0;
+    public BigInteger getPriority(){
+        BigInteger priority = new BigInteger("0");
         try {
-            priority = Integer.parseInt(this.inputPriority.getText());
+            priority = new BigInteger((this.inputPriority.getText()));
         }catch (NumberFormatException numberFormatException){
-            System.out.println("Error");
+            System.out.println("Error al convertir un número tan grande prioridad ");
         }
         return priority;
     }

@@ -51,6 +51,7 @@ public class PanelTableProcess extends JPanel{
         tableProcess.setBackground(Color.decode("#F2E9E4"));
         tableProcess.setOpaque(true);
         tableProcess.setRowHeight(25);
+
         
         scroll = new JScrollPane(tableProcess);
         scroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.decode("#204051")),

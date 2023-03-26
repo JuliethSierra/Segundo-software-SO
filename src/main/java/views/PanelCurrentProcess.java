@@ -36,6 +36,7 @@ public class PanelCurrentProcess extends JPanel {
         tableProcess.setOpaque(true);
         tableProcess.setRowHeight(25);
 
+
         scroll = new JScrollPane(tableProcess);
         scroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.decode("#204051")),
                 "Procesos Actuales", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, ConstantsGUI.FONT_TABLE_HEADER, Color.decode("#204051")));
