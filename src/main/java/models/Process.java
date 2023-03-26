@@ -4,6 +4,8 @@
  */
 package models;
 
+import java.math.BigInteger;
+
 /**
  *
  * @author julie
@@ -11,13 +13,13 @@ package models;
 public class Process {
     
     private String name;
-    private double time;
+    private BigInteger time;
     private boolean isLock;
-    private int priority;
+    private BigInteger priority;
 
     private boolean isSuspended;
     
-    public Process (String name, double time, boolean isLock, int priority, boolean isSuspended){
+    public Process (String name, BigInteger time, boolean isLock, BigInteger priority, boolean isSuspended){
         this.name = name;
         this.time = time;
         this.isLock = isLock;
@@ -39,11 +41,11 @@ public class Process {
         this.name = name;
     }
 
-    public double getTime() {
+    public BigInteger getTime() {
         return time;
     }
 
-    public void setTime(double time) {
+    public void setTime(BigInteger time) {
         this.time = time;
     }
 
@@ -59,11 +61,11 @@ public class Process {
         return isSuspended;
     }
 
-    public int getPriority() {
+    public BigInteger getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(BigInteger priority) {
         this.priority = priority;
     }
 

@@ -6,6 +6,9 @@ package presenters;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.math.BigInteger;
 
 import models.ProcessManager;
 import models.Process;
@@ -17,13 +20,13 @@ import views.ViewManager;
  *
  * @author julie
  */
-public class Presenter implements ActionListener{
+public class Presenter implements ActionListener, KeyListener {
     
     private ViewManager viewManager;
     private ProcessManager processManager;
     
     public Presenter(){
-        viewManager = new ViewManager(this);
+        viewManager = new ViewManager(this, this);
         processManager = new ProcessManager();
     }
     
@@ -111,13 +114,13 @@ public class Presenter implements ActionListener{
 
     private void confirmCreateProcess(){
         String nameProcess = viewManager.getNameProcess();
-        double timeProcess = viewManager.getTimeProcess();
+        BigInteger timeProcess = viewManager.getTimeProcess();
         boolean isBlocked = viewManager.getIsBlocked();
-        int priority = viewManager.getPriority();
+        BigInteger priority = viewManager.getPriority();
         boolean isSuspended = viewManager.getIsSuspended();
 
 
-        if(!processManager.isAlreadyName(nameProcess) && !nameProcess.trim().isEmpty()){
+        if(!processManager.isAlreadyName(nameProcess) && !nameProcess.trim().isEmpty() && !processManager.isAlreadyPriority(priority)){
             Process newProcess = new Process(nameProcess, timeProcess, isBlocked, priority, isSuspended);
             processManager.addQueueList(newProcess);
             viewManager.hideCreateDialog();
@@ -125,6 +128,8 @@ public class Presenter implements ActionListener{
         }
         else if(processManager.isAlreadyName(nameProcess))
             Utilities.showErrorDialog("Nombre ya existente", "Error");
+        else if(processManager.isAlreadyPriority(priority))
+            Utilities.showErrorDialog("Prioridad ya existente", "Error");
 
         else Utilities.showErrorDialog("Nombre inválido", "Error");
 
@@ -233,7 +238,7 @@ public class Presenter implements ActionListener{
 
     private void modifyDataProcess(){
         Process process1 = processManager.getProcess(viewManager.getIndexDataProcess());
-        Process process = new Process(viewManager.getModifyNameProcess(),viewManager.getModifyTimeProcess(),viewManager.getModifyIsBlocked(), viewManager.getModifyPriority(), viewManager.getModifyIsSuspended());
+        Process process = new Process(viewManager.getModifyNameProcess(), viewManager.getModifyTimeProcess(),viewManager.getModifyIsBlocked(), new BigInteger(viewManager.getModifyPriority()), viewManager.getModifyIsSuspended());
         if(process1.getName().equals(viewManager.getModifyNameProcess())){
             processManager.updateProcessInQueue(process,viewManager.getIndexDataProcess());
             viewManager.hideModifyDialog();
@@ -256,7 +261,6 @@ public class Presenter implements ActionListener{
             if(confirmation == 0){
                 processManager.deleteProcess(viewManager.getIndexDataProcess());
                 viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
-                viewManager.showDestroyedProcessReport(processManager.getListAsMatrixObject(processManager.getDestroyedList()));
             }
         }
     }
@@ -272,6 +276,23 @@ public class Presenter implements ActionListener{
         PersistenceManager.saveReport("Finalizados.txt", processManager.getFinishedList());
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (!Character.isDigit(c)) {
+            e.consume(); // Evita que se ingrese el carácter no válido
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }
     
 

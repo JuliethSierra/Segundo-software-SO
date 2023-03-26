@@ -8,6 +8,8 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.math.BigInteger;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -41,7 +43,7 @@ public class ViewManager extends JFrame{
 
     private PanelRestartedReport panelRestartedReport;
     
-    public ViewManager(ActionListener listener){
+    public ViewManager(ActionListener listener, KeyListener keyListener){
         this.setLayout(new BorderLayout());
         this.setTitle("Procesos");
         this.setFont(ConstantsGUI.MAIN_MENU);
@@ -52,11 +54,11 @@ public class ViewManager extends JFrame{
         this.setResizable(false);
         this.setExtendedState(MAXIMIZED_BOTH);
         this.getContentPane().setBackground(Color.decode("#f2e9e4"));
-        initComponents(listener);
+        initComponents(listener, keyListener);
         this.setVisible(true);
     }
     
-    private void initComponents(ActionListener listener){
+    private void initComponents(ActionListener listener, KeyListener keyListener){
         panelMenu = new PanelMenu(listener);
         this.add(panelMenu, BorderLayout.WEST);
 
@@ -64,11 +66,11 @@ public class ViewManager extends JFrame{
         this.add(panelTableProcess, BorderLayout.CENTER);
 
         panelMenuReport = new PanelMenuReport(listener);
-        jpCreateProcess = new JPCreateProcess(listener);
+        jpCreateProcess = new JPCreateProcess(listener, keyListener);
 
 
         panelReadyReport = new PanelReadyReport();
-        jdModifyProcess = new JDModifyProcess(listener);
+        jdModifyProcess = new JDModifyProcess(listener, keyListener);
         panelDispatchedReport = new PanelDispatchedReport();
         panelExecutionReport = new PanelExecutionReport();
         panelExpiredReport = new PanelExpiredReport();
@@ -109,7 +111,7 @@ public class ViewManager extends JFrame{
         return jpCreateProcess.getNameProcess();
     }
 
-    public double getTimeProcess(){
+    public BigInteger getTimeProcess(){
         return jpCreateProcess.getTimeProcess();
     }
 
@@ -117,7 +119,7 @@ public class ViewManager extends JFrame{
         return jpCreateProcess.getIsBlocked();
     }
 
-    public int getPriority(){
+    public BigInteger getPriority(){
         return jpCreateProcess.getPriority();
     }
 
@@ -127,7 +129,7 @@ public class ViewManager extends JFrame{
 
 
     public void showCurrentProcessReport(Object[][] queueProcess){
-        Object[][] newQueueList =  this.parseValuesIsBlock(queueProcess);
+        Object[][] newQueueList =  this.parseValuesIsBlockAndIsSuspended(queueProcess);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newQueueList, this.HEADERS_TABLE);
         this.panelCurrentProcess.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -137,7 +139,7 @@ public class ViewManager extends JFrame{
     }
 
     public void showReadyReport(Object[][] readyProcess){
-        Object[][] newList =  this.parseValuesIsBlock(readyProcess);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(readyProcess);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelReadyReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -147,7 +149,7 @@ public class ViewManager extends JFrame{
     }
 
     public void showDispatchedReport(Object[][] dispatchProcess){
-        Object[][] newList =  this.parseValuesIsBlock(dispatchProcess);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(dispatchProcess);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelDispatchedReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -157,7 +159,7 @@ public class ViewManager extends JFrame{
     }
 
     public void showExecutionReport(Object[][] executionProcess){
-        Object[][] newList =  this.parseValuesIsBlock(executionProcess);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(executionProcess);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelExecutionReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -167,7 +169,7 @@ public class ViewManager extends JFrame{
     }
 
     public void showExpiredProcessReport(Object[][] expiredProcess){
-        Object[][] newList =  this.parseValuesIsBlock(expiredProcess);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(expiredProcess);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelExpiredReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -176,7 +178,7 @@ public class ViewManager extends JFrame{
         SwingUtilities.updateComponentTreeUI(this);
     }
     public void showBlockedProcessReport(Object[][] blockedList){
-        Object[][] newList =  this.parseValuesIsBlock(blockedList);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(blockedList);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelBlockedReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -185,7 +187,7 @@ public class ViewManager extends JFrame{
         SwingUtilities.updateComponentTreeUI(this);
     }
     public void showAwakeProcessReport(Object[][] wakeUpList){
-        Object[][] newList =  this.parseValuesIsBlock(wakeUpList);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(wakeUpList);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelAwakeReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -195,7 +197,7 @@ public class ViewManager extends JFrame{
     }
 
     public void showFinishedProcessReport(Object[][] finishedList){
-        Object[][] newList =  this.parseValuesIsBlock(finishedList);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(finishedList);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelCompletedReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -205,7 +207,7 @@ public class ViewManager extends JFrame{
     }
 
     public void showDestroyedProcessReport(Object[][] destroyedList){
-        Object[][] newList =  this.parseValuesIsBlock(destroyedList);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(destroyedList);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelDestroyedReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -215,7 +217,7 @@ public class ViewManager extends JFrame{
     }
 
     public void showSuspendedProcessReport(Object[][] suspendedList){
-        Object[][] newList =  this.parseValuesIsBlock(suspendedList);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(suspendedList);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelSuspendedReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -225,7 +227,7 @@ public class ViewManager extends JFrame{
     }
 
     public void showRestartedReportProcessReport(Object[][] restartedList){
-        Object[][] newList =  this.parseValuesIsBlock(restartedList);
+        Object[][] newList =  this.parseValuesIsBlockAndIsSuspended(restartedList);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newList, this.HEADERS_TABLE);
         this.panelRestartedReport.setTableProcess(defaultTableModel);
         this.hideAllPanels();
@@ -267,15 +269,17 @@ public class ViewManager extends JFrame{
     }
 
     public void setValuesToTableProcessInQueue(Object[][] queueListAsStringList){
-        Object[][] newQueueList =  this.parseValuesIsBlock(queueListAsStringList);
+        Object[][] newQueueList =  this.parseValuesIsBlockAndIsSuspended(queueListAsStringList);
         DefaultTableModel defaultTableModel = new DefaultTableModel(newQueueList, HEADERS_TABLE);
         this.panelTableProcess.setTableProcess(defaultTableModel);
     }
 
-    private Object[][] parseValuesIsBlock(Object[][] queueList){
+    private Object[][] parseValuesIsBlockAndIsSuspended(Object[][] queueList){
         int size = queueList.length;
         for(int i = 0; i < size; i++){
             queueList[i][2] = queueList[i][2].equals(true) ? "Sí" : "No";
+            queueList[i][3] = queueList[i][2].equals(true) ? "Sí" : "No";
+
         }
         return queueList;
     }
@@ -288,7 +292,7 @@ public class ViewManager extends JFrame{
         jdModifyProcess.setInputNameProcess(inputNameProcess);
     }
 
-    public void setInputTimeProcess(double inputTimeProcess) {
+    public void setInputTimeProcess(BigInteger inputTimeProcess) {
         jdModifyProcess.setInputTimeProcess(inputTimeProcess);
     }
 
@@ -304,16 +308,16 @@ public class ViewManager extends JFrame{
         return jdModifyProcess.getNameProcess();
     }
 
-    public double getModifyTimeProcess(){
-        return Double.parseDouble(jdModifyProcess.getTimeProcess().toString());
+    public BigInteger getModifyTimeProcess(){
+        return new BigInteger(jdModifyProcess.getTimeProcess().toString());
     }
 
     public boolean getModifyIsBlocked(){
         return jdModifyProcess.getIsBlocked();
     }
 
-    public int getModifyPriority(){
-        return jdModifyProcess.getModifyPriority();
+    public String getModifyPriority(){
+        return String.valueOf(jdModifyProcess.getModifyPriority());
     }
 
     public boolean getModifyIsSuspended(){

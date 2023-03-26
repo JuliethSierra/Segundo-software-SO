@@ -4,17 +4,19 @@ import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.math.BigInteger;
 
 public class JDModifyProcess extends  JDialog{
     private ButtonActions modify, cancel;
-    private JTextField inputNameProcess, inputPriority;
+    private JTextField inputNameProcess, inputPriority, inputTimeProcess;
     private JLabel nameProcess, timeProcess, blockProcess, suspendedProcess, priorityProcess;
-    private JSpinner inputTimeProcess;
+
     private JRadioButton yesButton, noButton, yesButtonSuspended, noButtonSuspended;
     private ButtonGroup groupRadioButton, groupRadioButtonSuspended;
     private JPanel panelGroup;
 
-    public JDModifyProcess(ActionListener listener){
+    public JDModifyProcess(ActionListener listener, KeyListener keyListener){
         this.setModal(true);
         this.setTitle("Modificar Proceso");
         this.setLayout(new GridBagLayout());
@@ -25,10 +27,10 @@ public class JDModifyProcess extends  JDialog{
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.getContentPane().setBackground(Color.decode("#C9ADA7"));
-        initComponents(listener);
+        initComponents(listener, keyListener);
     }
 
-    private void initComponents(ActionListener listener){
+    private void initComponents(ActionListener listener, KeyListener keyListener){
         nameProcess = new JLabel("Nombre");
         nameProcess.setFont(ConstantsGUI.FONT_TITLE_INPUTS);
         addComponent(nameProcess, 0, 0);
@@ -44,13 +46,12 @@ public class JDModifyProcess extends  JDialog{
         timeProcess.setFont(ConstantsGUI.FONT_TITLE_INPUTS);
         addComponent(timeProcess, 0, 1);
 
-        inputTimeProcess = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 5));
-        ((DefaultFormatter) ((JSpinner.NumberEditor) inputTimeProcess.getEditor()).getTextField().getFormatter()).setAllowsInvalid(false);
-        inputTimeProcess.setBackground(Color.decode("#f2e9e4"));
+        inputTimeProcess = new JTextField(10);
+        inputTimeProcess.addKeyListener(keyListener);
+        inputTimeProcess.setSize(100,50);
+        inputTimeProcess.setPreferredSize(new Dimension(100,30));
+        inputTimeProcess.setBackground(Color.WHITE);
         inputTimeProcess.setFont(ConstantsGUI.FONT_INPUTS);
-        inputTimeProcess.setForeground(Color.WHITE);
-        inputTimeProcess.setSize(30,50);
-        inputTimeProcess.setPreferredSize(new Dimension(185,30));
         addComponent(inputTimeProcess, 1, 1);
 
         priorityProcess = new JLabel("Prioridad");
@@ -140,19 +141,19 @@ public class JDModifyProcess extends  JDialog{
     }
 
     public Object getTimeProcess(){
-        return inputTimeProcess.getValue();
+        return inputTimeProcess.getText();
     }
 
     public boolean getIsBlocked(){
         return yesButton.isSelected();
     }
 
-    public int getModifyPriority(){
-        int priority = 0;
+    public BigInteger getModifyPriority(){
+        BigInteger priority = new BigInteger("0");
         try {
-            priority = Integer.parseInt(this.inputPriority.getText());
+            priority = new BigInteger(this.inputPriority.getText());
         }catch (NumberFormatException numberFormatException){
-            System.out.println("Error");
+            System.out.println("Error en modificar");
         }
         return priority;
     }
@@ -164,8 +165,8 @@ public class JDModifyProcess extends  JDialog{
         this.inputNameProcess.setText(inputNameProcess);
     }
 
-    public void setInputTimeProcess(double inputTimeProcess) {
-        this.inputTimeProcess.setValue(inputTimeProcess);
+    public void setInputTimeProcess(BigInteger inputTimeProcess) {
+        this.inputTimeProcess.setText(inputTimeProcess.toString());
     }
 
     public void setRadioButton(boolean isblock){
@@ -184,7 +185,7 @@ public class JDModifyProcess extends  JDialog{
 
     public void cleanFields(){
         this.inputNameProcess.setText("");
-        this.inputTimeProcess.setValue(0);
+        this.inputTimeProcess.setText("0");
         this.yesButton.setSelected(true);
         this.inputPriority.setText("");
         this.yesButtonSuspended.setSelected(true);

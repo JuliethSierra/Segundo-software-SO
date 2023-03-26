@@ -4,6 +4,7 @@
  */
 package models;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,18 +55,29 @@ public class ProcessManager {
         return false;
     }
 
+    public boolean isAlreadyPriority(BigInteger priority){
+        for (Process process : queueList) {
+            if (process.getPriority().equals(priority))
+                return true;
+        }
+        return false;
+    }
+
 
     public Object[][] getListAsMatrixObject(ArrayList<Process> list){
         return this.parseArrayListToMatrixObject(list);
     }
     private Object[][] parseArrayListToMatrixObject(ArrayList<Process> list){
         int sizeQueue = list.size();
-        Object[][] processList = new Object[sizeQueue][3];
+        Object[][] processList = new Object[sizeQueue][5];
 
         for(int i = 0; i < sizeQueue; i++){
             processList[i][0] = list.get(i).getName();
             processList[i][1] = list.get(i).getTime();
             processList[i][2] = list.get(i).isIsLock();
+            processList[i][3] = list.get(i).isSuspended();
+            processList[i][4] = list.get(i).getPriority();
+
         }
 
         return processList;
@@ -85,16 +97,16 @@ public class ProcessManager {
                 this.loadToDispatchQueue(new Process(readyList.get(i)));
                 this.loadToExecQueue(new Process(readyList.get(i)));
 
-                if(!(readyList.get(i).getTime() == 0)){
-                    if (readyList.get(i).getTime() > PROCESS_TIME && !readyList.get(i).isIsLock()) {
+                if(!(readyList.get(i).getTime().equals("0"))){
+                    if ((readyList.get(i).getTime().compareTo(new BigInteger(String.valueOf(PROCESS_TIME))) > 0) && !readyList.get(i).isIsLock()) {
                         this.loadToExpirationTimeQueue(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
                         this.loadToReadyQueue(new Process(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended())));
-                    } else if (readyList.get(i).getTime() > PROCESS_TIME && readyList.get(i).isIsLock()) {
+                    } else if ((readyList.get(i).getTime().compareTo(new BigInteger(String.valueOf(PROCESS_TIME))) > 0) && readyList.get(i).isIsLock()) {
                         this.loadToBlockList(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
                         this.loadToWakeUpList(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
                         this.loadToReadyQueue(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
                     }else {
-                        this.loadToFinishedQueue(new Process(readyList.get(i).getName(), 0, readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
+                        this.loadToFinishedQueue(new Process(readyList.get(i).getName(), new BigInteger("0"), readyList.get(i).isIsLock(), new BigInteger(String.valueOf(readyList.get(i).getPriority())), readyList.get(i).isSuspended()));
                     }
                 }
                 else
@@ -133,8 +145,8 @@ public class ProcessManager {
         this.executionList.add(process);
     }
 
-    private double consumeTimeProcess(Process process) {
-        return (process.getTime() - PROCESS_TIME);
+    private BigInteger consumeTimeProcess(Process process) {
+        return (process.getTime().subtract( new BigInteger(String.valueOf(PROCESS_TIME))));
     }
 
 
