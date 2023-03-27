@@ -57,7 +57,7 @@ public class PersistenceManager {
 
     public static void showManual(){
         try {
-            File path = new File("src/main/java/resources/Manual de usuariodocx.docx");
+            File path = new File("./Manual de usuariodocx.docx");
             Desktop.getDesktop().open(path);
         }catch (IOException ex) {
             ex.printStackTrace();
