@@ -31,6 +31,8 @@ public class Process {
         this.name = process.getName();
         this.time = process.getTime();
         this.isLock = process.isLock();
+        this.priority = process.getPriority();
+        this.isSuspended = process.isSuspended();
     }
 
     public String getName() {
@@ -75,6 +77,8 @@ public class Process {
                 "name='" + name + '\'' +
                 ", time=" + time +
                 ", isLock=" + isLock +
+                ", priority=" + priority +
+                ", isSuspended=" + isSuspended +
                 '}';
     }
 }

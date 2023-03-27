@@ -39,7 +39,7 @@ public class PanelDestroyedReport extends JPanel{
 
         scroll = new JScrollPane(tableProcess);
         scroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.decode("#204051")),
-                "Procesos Actuales", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, ConstantsGUI.FONT_TABLE_HEADER, Color.decode("#204051")));
+                "Procesos Destruidos", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, ConstantsGUI.FONT_TABLE_HEADER, Color.decode("#204051")));
         scroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(scroll, BorderLayout.PAGE_END);
         setBorder(null);

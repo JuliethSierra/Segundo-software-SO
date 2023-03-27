@@ -58,7 +58,7 @@ public class PanelMenu extends JPanel{
         destroyProcess.setActionCommand("Eliminar");
         addComponent(destroyProcess, 0, 4);
 
-        createRelation = new ButtonMenu("Crear Relación");
+        createRelation = new ButtonMenu("Comunicados");
         createRelation.addActionListener(listener);
         createRelation.setActionCommand("Relacion");
         addComponent(createRelation, 0, 5);
