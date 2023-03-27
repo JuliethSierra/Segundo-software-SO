@@ -1,7 +1,6 @@
 package views;
 
 import javax.swing.*;
-import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -63,6 +62,7 @@ public class JDModifyProcess extends  JDialog{
         inputPriority.setPreferredSize(new Dimension(100,30));
         inputPriority.setBackground(Color.WHITE);
         inputPriority.setFont(ConstantsGUI.FONT_INPUTS);
+        inputPriority.addKeyListener(keyListener);
         addComponent(inputPriority, 1, 2);
 
         blockProcess = new JLabel("Bloquear");
@@ -169,11 +169,22 @@ public class JDModifyProcess extends  JDialog{
         this.inputTimeProcess.setText(inputTimeProcess.toString());
     }
 
-    public void setRadioButton(boolean isblock){
-        if(isblock) {
+    public void setPriority(BigInteger priority){
+        this.inputPriority.setText(priority.toString());
+    }
+
+    public void setIsBlock(boolean isBlock){
+        if(isBlock) {
             yesButton.isSelected();
         }else
             noButton.isSelected();
+    }
+
+    public void setIsSuspended(boolean isSuspended){
+        if(isSuspended) {
+            yesButtonSuspended.isSelected();
+        }else
+            noButtonSuspended.isSelected();
     }
 
     public void setRadioButtonSuspended(boolean isSuspended){

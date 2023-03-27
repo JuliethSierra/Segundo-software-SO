@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+
  */
 package views;
 
@@ -21,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 public class ViewManager extends JFrame{
 
     private final Object[] HEADERS_TABLE = ConstantsGUI.headers;
+    private final String[] HEADERS_RELATED_TABLE = ConstantsGUI.HEADERS_RELATED_TABLE;
 
 
     private PanelMenu panelMenu;
@@ -42,6 +42,8 @@ public class ViewManager extends JFrame{
     private PanelSuspendedReport panelSuspendedReport;
 
     private PanelRestartedReport panelRestartedReport;
+    private JDCreateRelation jdCreateRelation;
+    private RelatedProcess relatedProcess;
     
     public ViewManager(ActionListener listener, KeyListener keyListener){
         this.setLayout(new BorderLayout());
@@ -67,8 +69,6 @@ public class ViewManager extends JFrame{
 
         panelMenuReport = new PanelMenuReport(listener);
         jpCreateProcess = new JPCreateProcess(listener, keyListener);
-
-
         panelReadyReport = new PanelReadyReport();
         jdModifyProcess = new JDModifyProcess(listener, keyListener);
         panelDispatchedReport = new PanelDispatchedReport();
@@ -81,6 +81,8 @@ public class ViewManager extends JFrame{
         panelDestroyedReport = new PanelDestroyedReport();
         panelSuspendedReport = new PanelSuspendedReport();
         panelRestartedReport = new PanelRestartedReport();
+        jdCreateRelation = new JDCreateRelation(listener);
+        relatedProcess = new RelatedProcess();
     }
 
 
@@ -101,7 +103,12 @@ public class ViewManager extends JFrame{
         this.add(panelMenu, BorderLayout.WEST);
         SwingUtilities.updateComponentTreeUI(this);
     }
-    
+
+    public void changeToCreateProcessPanel(){
+        this.hideAllPanels();
+        this.panelTableProcess.setVisible(true);
+
+    }
     public void showCreateProcessPanel(){
         jpCreateProcess.setVisible(true);
         SwingUtilities.updateComponentTreeUI(this);
@@ -249,6 +256,8 @@ public class ViewManager extends JFrame{
         this.panelDestroyedReport.setVisible(false);
         this.panelSuspendedReport.setVisible(false);
         this.panelRestartedReport.setVisible(false);
+        this.jdCreateRelation.setVisible(false);
+        this.relatedProcess.setVisible(false);
         SwingUtilities.updateComponentTreeUI(this);
     }
     public void showModifyProcessPanel(){
@@ -278,7 +287,7 @@ public class ViewManager extends JFrame{
         int size = queueList.length;
         for(int i = 0; i < size; i++){
             queueList[i][2] = queueList[i][2].equals(true) ? "Sí" : "No";
-            queueList[i][3] = queueList[i][2].equals(true) ? "Sí" : "No";
+            queueList[i][3] = queueList[i][3].equals(true) ? "Sí" : "No";
 
         }
         return queueList;
@@ -296,8 +305,16 @@ public class ViewManager extends JFrame{
         jdModifyProcess.setInputTimeProcess(inputTimeProcess);
     }
 
-    public void setRadioButton(boolean isblock){
-        jdModifyProcess.setRadioButton(isblock);
+    public void setPriority(BigInteger priority){
+        this.jdModifyProcess.setPriority(priority);
+    }
+
+    public void setIsBlock(boolean isBlock){
+        jdModifyProcess.setIsBlock(isBlock);
+    }
+
+    public void setIsSuspended(boolean isSuspended){
+        this.jdModifyProcess.setIsSuspended(isSuspended);
     }
 
     public void setRadioButtonSuspended(boolean isSuspended){
@@ -324,4 +341,48 @@ public class ViewManager extends JFrame{
         return jdModifyProcess.getModifyIsSuspended();
     }
 
+    public void setValuesToCombos(String[] processName){
+        this.jdCreateRelation.setValuesCombos(processName);
+    }
+    public void showCreateRelation() {
+        this.jdCreateRelation.setVisible(true);
+        SwingUtilities.updateComponentTreeUI(this);
+
+    }
+
+    public void hideCreateRelation(){
+        this.jdCreateRelation.setVisible(false);
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    public String getSelectedElementFirstCombo() {
+        return this.jdCreateRelation.getSelectedElementFirstCombo();
+    }
+    public String getSelectedElementSecondCombo() {
+        return this.jdCreateRelation.getSelectedElementSecondCombo();
+    }
+
+    public void showRelations(){
+        this.relatedProcess.setVisible(true);
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    public void setRelations(Object[][] relationsAsMatrixObject) {
+        DefaultTableModel defaultTableModel = new DefaultTableModel(relationsAsMatrixObject, this.HEADERS_RELATED_TABLE);
+        this.relatedProcess.setTableProcess(defaultTableModel);
+        this.hideAllPanels();
+        this.relatedProcess.setVisible(true);
+        add(relatedProcess, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(this);
+
+    }
+
+    public int getIndexRelation() {
+        return this.relatedProcess.getIndexRelation();
+    }
+
+    public void setValuesToRelations(Object[][] relationsAsMatrixObject) {
+        DefaultTableModel defaultTableModel = new DefaultTableModel(relationsAsMatrixObject, HEADERS_RELATED_TABLE);
+        this.relatedProcess.setTableProcess(defaultTableModel);
+    }
 }

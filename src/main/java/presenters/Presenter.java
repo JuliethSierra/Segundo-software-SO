@@ -24,6 +24,7 @@ public class Presenter implements ActionListener, KeyListener {
     
     private ViewManager viewManager;
     private ProcessManager processManager;
+    private boolean isInCreateOption = true;
     
     public Presenter(){
         viewManager = new ViewManager(this, this);
@@ -53,10 +54,22 @@ public class Presenter implements ActionListener, KeyListener {
                 this.modifyProcess();
                 break;
             case "Modificado":
-                this.modifyDataProcess();
+                this.modify();
                 break;
             case "Eliminar":
-                this.deleteProcess();
+                this.deleteProcessAndRelations();
+                break;
+            case "Relacion":
+                this.createRelation();
+                break;
+            case "Añadir Relacion":
+                this.confirmCreateRelation();
+                break;
+            case "Ver Relaciones":
+                this.showRelations();
+                break;
+            case "Cancelar Relacion":
+                this.cancelRelation();
                 break;
             case "Reportes":
                 this.changeToMenuReports();
@@ -105,11 +118,19 @@ public class Presenter implements ActionListener, KeyListener {
                 break;
             case "Salir":
                 System.exit(0);
+                break;
         }
     }
     
     private void createProcess(){
-        viewManager.showCreateProcessPanel();
+        if(isInCreateOption)
+            viewManager.showCreateProcessPanel();
+        else {
+            viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
+            viewManager.showTableProcessPanel();
+            this.isInCreateOption = true;
+        }
+
     }
 
     private void confirmCreateProcess(){
@@ -124,6 +145,7 @@ public class Presenter implements ActionListener, KeyListener {
             Process newProcess = new Process(nameProcess, timeProcess, isBlocked, priority, isSuspended);
             processManager.addQueueList(newProcess);
             viewManager.hideCreateDialog();
+
             viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
         }
         else if(processManager.isAlreadyName(nameProcess))
@@ -230,39 +252,113 @@ public class Presenter implements ActionListener, KeyListener {
             Process process = processManager.getProcess(viewManager.getIndexDataProcess());
             viewManager.setInputNameProcess(process.getName());
             viewManager.setInputTimeProcess(process.getTime());
-            viewManager.setRadioButton(process.isIsLock());
+            viewManager.setIsBlock(process.isLock());
+            viewManager.setIsSuspended(process.isSuspended());
+            viewManager.setPriority(process.getPriority());
             viewManager.showModifyProcessPanel();
         }
 
     }
 
-    private void modifyDataProcess(){
-        Process process1 = processManager.getProcess(viewManager.getIndexDataProcess());
+
+
+
+
+    public void modify(){
+        Process currentProcess = processManager.getProcess(viewManager.getIndexDataProcess());
         Process process = new Process(viewManager.getModifyNameProcess(), viewManager.getModifyTimeProcess(),viewManager.getModifyIsBlocked(), new BigInteger(viewManager.getModifyPriority()), viewManager.getModifyIsSuspended());
-        if(process1.getName().equals(viewManager.getModifyNameProcess())){
-            processManager.updateProcessInQueue(process,viewManager.getIndexDataProcess());
-            viewManager.hideModifyDialog();
-            viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
-        }else if(processManager.isAlreadyName(viewManager.getModifyNameProcess())){
-            Utilities.showErrorDialog("Nombre ya existente", "Error");
+        String modifyNameProcess = viewManager.getModifyNameProcess();
+        String modifyPriority = viewManager.getModifyPriority();
+
+        if(!currentProcess.getName().equals(modifyNameProcess) && processManager.isAlreadyName(modifyNameProcess)){
+            Utilities.showErrorDialog("Ya existe  un proceso con este nombre", "Error");
         }
-        else{
+        else if(!(currentProcess.getPriority().compareTo(new BigInteger(modifyPriority)) == 0) && processManager.isAlreadyPriority(new BigInteger(modifyPriority))){
+            Utilities.showErrorDialog("Ya existe  un proceso con esta prioridad", "Error");
+
+        }
+        else {
             processManager.updateProcessInQueue(process,viewManager.getIndexDataProcess());
             viewManager.hideModifyDialog();
             viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
+            processManager.updateRelation(currentProcess.getName(),modifyNameProcess);
         }
     }
 
-    private void deleteProcess(){
-        if(viewManager.getIndexDataProcess() == -1){
-            Utilities.showErrorDialog("Debe seleccionar un proceso", "Error");
-        }else{
-            int confirmation = Utilities.showConfirmationWarning();
-            if(confirmation == 0){
-                processManager.deleteProcess(viewManager.getIndexDataProcess());
-                viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
+    private void deleteProcessAndRelations(){
+        if(isInCreateOption){
+            if(viewManager.getIndexDataProcess() == -1){
+                Utilities.showErrorDialog("Debe seleccionar un proceso", "Error");
+            } else if(processManager.hasRelation(processManager.getProcess(viewManager.getIndexDataProcess()))){
+                Utilities.showErrorDialog("El proceso tiene relaciones. Elimínelas primero", "Error");
+            }
+            else{
+                int confirmation = Utilities.showConfirmationWarning();
+                if(confirmation == 0){
+                    processManager.deleteProcess(viewManager.getIndexDataProcess());
+                    viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
+                }
             }
         }
+        else {
+            if(viewManager.getIndexRelation() == -1){
+                Utilities.showErrorDialog("Debe seleccionar una relación", "Error");
+            }
+            else {
+                int confirmation = Utilities.showConfirmationWarning();
+                if(confirmation == 0){
+                    processManager.deleteRelation(viewManager.getIndexRelation());
+                    viewManager.setValuesToRelations(processManager.getRelationsAsMatrixObject());
+
+                }
+
+            }
+        }
+
+    }
+
+    private void createRelation(){
+        if(processManager.getQueueList().size() > 1){
+            this.viewManager.setValuesToCombos(processManager.getProcessNameAsArray());
+            this.viewManager.showCreateRelation();
+        }
+        else {
+            Utilities.showErrorDialog("Debe crear al menos dos procesos", "Error");
+        }
+
+    }
+
+    private void confirmCreateRelation(){
+        Process firstElement = this.processManager.searchProcessByName(this.viewManager.getSelectedElementFirstCombo());
+        Process secondElement = this.processManager.searchProcessByName(this.viewManager.getSelectedElementSecondCombo());
+
+        if(firstElement != null && secondElement != null){
+            if(!firstElement.equals(secondElement)){
+                if(!processManager.existRelation(firstElement, secondElement)){
+                    processManager.addRelation(this.processManager.searchProcessByName(firstElement.getName()), this.processManager.searchProcessByName(secondElement.getName()));
+                    Utilities.showDoneCreationRelation();
+                    viewManager.hideCreateRelation();
+                }
+                else {
+                    Utilities.showErrorDialog("Estos procesos ya se encuentran relacionados", "Error");
+                }
+            }
+            else {
+                Utilities.showErrorDialog("No puede relacionar un proceso con él mismo", "Error");
+            }
+        }
+
+    }
+
+    private void showRelations(){
+        this.isInCreateOption = false;
+        this.viewManager.setRelations(processManager.getRelationsAsMatrixObject());
+        this.viewManager.showRelations();
+
+    }
+
+    private void cancelRelation(){
+        this.viewManager.hideCreateRelation();
     }
 
     private void saveReports(){

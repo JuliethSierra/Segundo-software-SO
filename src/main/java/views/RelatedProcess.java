@@ -3,16 +3,16 @@ package views;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 
-public class PanelCompletedReport extends JPanel {
+public class RelatedProcess extends JPanel {
 
     private DefaultTableModel modelTableReport;
     private JTable tableProcessReport;
     private JScrollPane scrollReport;
 
-    public PanelCompletedReport(){
+
+    public RelatedProcess(){
         initComponents();
         setVisible(true);
     }
@@ -20,7 +20,7 @@ public class PanelCompletedReport extends JPanel {
     private void initComponents(){
         setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         setBackground(Color.WHITE);
-        String[] headers  = ConstantsGUI.headers;
+        String[] headers  = ConstantsGUI.HEADERS_RELATED_TABLE;
         modelTableReport = new DefaultTableModel();
         modelTableReport.setColumnIdentifiers(headers);
 
@@ -38,7 +38,7 @@ public class PanelCompletedReport extends JPanel {
 
         scrollReport = new JScrollPane(tableProcessReport);
         scrollReport.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.decode("#204051")),
-                "Procesos Finalizados", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, ConstantsGUI.FONT_TABLE_HEADER, Color.decode("#204051")));
+                "Procesos Relacionados", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, ConstantsGUI.FONT_TABLE_HEADER, Color.decode("#204051")));
         scrollReport.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(scrollReport, BorderLayout.PAGE_END);
         setBorder(null);
@@ -47,5 +47,10 @@ public class PanelCompletedReport extends JPanel {
     public void setTableProcess(DefaultTableModel defaultTableModel){
         this.modelTableReport = defaultTableModel;
         this.tableProcessReport.setModel(defaultTableModel);
+    }
+
+
+    public int getIndexRelation() {
+        return this.tableProcessReport.getSelectedRow();
     }
 }

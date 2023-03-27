@@ -30,7 +30,7 @@ public class PersistenceManager {
                 bufferedWriter.write(String.valueOf(reportList.get(i).getTime()));
                 bufferedWriter.write("     |  |");
                 bufferedWriter.write("  ");
-                bufferedWriter.write(isBlock(reportList.get(i).isIsLock()));
+                bufferedWriter.write(isBlock(reportList.get(i).isLock()));
                 bufferedWriter.write("      |");
                 bufferedWriter.write("  ");
                 bufferedWriter.newLine();
