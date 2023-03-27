@@ -22,4 +22,6 @@ public class ConstantsGUI {
     public static final Font FONT_TITLE_INPUTS = new Font("Century Gothic", Font.BOLD , 18);
 
     public static String[] headers  = {"Nombre", "Tiempo", "Bloqueo", "Suspender", "Prioridad"};
+
+    public static String[] HEADERS_RELATED_TABLE = {"Proceso 1", "Proceso 2"};
 }

@@ -23,7 +23,7 @@ public class PanelMenu extends JPanel{
     private ButtonMenu modifyProcess;
     private ButtonMenu destroyProcess;
     private ButtonMenu reports;
-    private ButtonMenu sendProcess, viewManual;
+    private ButtonMenu sendProcess, viewManual, createRelation, seeRelation;
     private ButtonMenu exit;
     private JLabel titleMenu;
     
@@ -57,26 +57,36 @@ public class PanelMenu extends JPanel{
         destroyProcess.addActionListener(listener);
         destroyProcess.setActionCommand("Eliminar");
         addComponent(destroyProcess, 0, 4);
+
+        createRelation = new ButtonMenu("Crear Relación");
+        createRelation.addActionListener(listener);
+        createRelation.setActionCommand("Relacion");
+        addComponent(createRelation, 0, 5);
+
+        seeRelation = new ButtonMenu("Ver relaciones");
+        seeRelation.addActionListener(listener);
+        seeRelation.setActionCommand("Ver Relaciones");
+        addComponent(seeRelation, 0, 6);
         
         reports = new ButtonMenu("Reportes");
         reports.addActionListener(listener);
         reports.setActionCommand("Reportes");
-        addComponent(reports, 0, 5);
+        addComponent(reports, 0, 7);
         
         sendProcess = new ButtonMenu("Iniciar Simulación");
         sendProcess.addActionListener(listener);
         sendProcess.setActionCommand("Enviar");
-        addComponent(sendProcess, 0, 6);
-        
-        exit = new ButtonMenu("Salir");
-        exit.addActionListener(listener);
-        exit.setActionCommand("Salir");
-        addComponent(exit, 0, 7);
+        addComponent(sendProcess, 0, 8);
 
         viewManual = new ButtonMenu("Manual de usuario");
         viewManual.addActionListener(listener);
         viewManual.setActionCommand("ManualUsuario");
-        addComponent(viewManual, 0, 8);
+        addComponent(viewManual, 0, 9);
+
+        exit = new ButtonMenu("Salir");
+        exit.addActionListener(listener);
+        exit.setActionCommand("Salir");
+        addComponent(exit, 0, 10);
     }
     
     public void addComponent(JComponent component, int x, int y){

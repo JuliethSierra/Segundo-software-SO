@@ -29,7 +29,7 @@ public class JPCreateProcess extends JDialog {
     private JLabel nameProcess, timeProcess, blockProcess, priorityProcess, suspendedProcess;
     private JRadioButton yesButton, noButton, yesButtonSuspended, noButtonSuspended;
     private ButtonGroup groupRadioButton, groupRadioButtonSuspended;
-    private JPanel panelGroup;
+    private JPanel panelGroup, panelGroupSuspended;
     
     public JPCreateProcess(ActionListener listener, KeyListener keyListener){
         this.setModal(true);
@@ -78,6 +78,7 @@ public class JPCreateProcess extends JDialog {
         inputPriority.setPreferredSize(new Dimension(100,30));
         inputPriority.setBackground(Color.WHITE);
         inputPriority.setFont(ConstantsGUI.FONT_INPUTS);
+        inputPriority.addKeyListener(keyListener);
         addComponent(inputPriority, 1, 2);
 
         blockProcess = new JLabel("Bloquear");
@@ -110,6 +111,7 @@ public class JPCreateProcess extends JDialog {
         addComponent(suspendedProcess,0 , 4);
 
         groupRadioButtonSuspended = new ButtonGroup();
+
         yesButtonSuspended = new JRadioButton("Si");
         yesButtonSuspended.setBackground(Color.decode("#C9ADA7"));
         yesButtonSuspended.setForeground(Color.BLACK);
@@ -123,12 +125,12 @@ public class JPCreateProcess extends JDialog {
         groupRadioButtonSuspended.add(yesButtonSuspended);
         groupRadioButtonSuspended.add(noButtonSuspended);
         yesButtonSuspended.setSelected(true);
-        panelGroup = new JPanel();
-        panelGroup.setBackground(Color.decode("#C9ADA7"));
-        panelGroup.add(yesButtonSuspended);
-        panelGroup.add(noButtonSuspended);
-        addComponent(panelGroup, 1, 4);
-        
+        panelGroupSuspended = new JPanel();
+        panelGroupSuspended.setBackground(Color.decode("#C9ADA7"));
+        panelGroupSuspended.add(yesButtonSuspended);
+        panelGroupSuspended.add(noButtonSuspended);
+        addComponent(panelGroupSuspended, 1, 4);
+
         create = new ButtonActions("Añadir");
         create.addActionListener(listener);
         create.setActionCommand("Añadir");

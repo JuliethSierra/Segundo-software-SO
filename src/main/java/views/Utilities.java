@@ -22,4 +22,8 @@ public class Utilities {
         JOptionPane.showMessageDialog(null, "Los procesos han sido ejecutados con éxito", "Acción realizada", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public static void showDoneCreationRelation(){
+        JOptionPane.showMessageDialog(null, "La relación ha sido creada exitosamente", "Acción realizada", JOptionPane.INFORMATION_MESSAGE);
+    }
+
 }

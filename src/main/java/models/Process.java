@@ -30,7 +30,7 @@ public class Process {
     public Process (Process process){
         this.name = process.getName();
         this.time = process.getTime();
-        this.isLock = process.isIsLock();
+        this.isLock = process.isLock();
     }
 
     public String getName() {
@@ -49,7 +49,7 @@ public class Process {
         this.time = time;
     }
 
-    public boolean isIsLock() {
+    public boolean isLock() {
         return isLock;
     }
 

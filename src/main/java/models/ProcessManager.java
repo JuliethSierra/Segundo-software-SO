@@ -4,8 +4,10 @@
  */
 package models;
 
+import java.io.ObjectStreamException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,6 +19,7 @@ public class ProcessManager {
     private final int PROCESS_TIME = 5;
 
     private List<Process> currentList, queueList, readyList, dispatchList, executionList, finishedList, blockList, expirationList, wakeUpList, destroyedList, suspendedList, restartedList;
+    private ArrayList<ArrayList<Process>> relationList;
 
     public ProcessManager() {
         this.queueList = new ArrayList<Process>();
@@ -31,6 +34,8 @@ public class ProcessManager {
         this.destroyedList = new ArrayList<Process>();
         this.suspendedList = new ArrayList<Process>();
         this.restartedList = new ArrayList<Process>();
+        this.relationList = new ArrayList<>();
+
 
     }
 
@@ -74,13 +79,22 @@ public class ProcessManager {
         for(int i = 0; i < sizeQueue; i++){
             processList[i][0] = list.get(i).getName();
             processList[i][1] = list.get(i).getTime();
-            processList[i][2] = list.get(i).isIsLock();
+            processList[i][2] = list.get(i).isLock();
             processList[i][3] = list.get(i).isSuspended();
             processList[i][4] = list.get(i).getPriority();
 
         }
 
         return processList;
+    }
+
+    public Object[][] getRelationsAsMatrixObject(){
+        Object[][] relationMatrix = new Object[this.relationList.size()][2];
+        for(int i = 0; i < relationList.size(); i++){
+            relationMatrix[i][0] = this.relationList.get(i).get(0).getName();
+            relationMatrix[i][1] = this.relationList.get(i).get(1).getName();
+        }
+        return relationMatrix;
     }
 
     public void addDestroyedList(Process process){
@@ -98,15 +112,15 @@ public class ProcessManager {
                 this.loadToExecQueue(new Process(readyList.get(i)));
 
                 if(!(readyList.get(i).getTime().equals("0"))){
-                    if ((readyList.get(i).getTime().compareTo(new BigInteger(String.valueOf(PROCESS_TIME))) > 0) && !readyList.get(i).isIsLock()) {
-                        this.loadToExpirationTimeQueue(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
-                        this.loadToReadyQueue(new Process(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended())));
-                    } else if ((readyList.get(i).getTime().compareTo(new BigInteger(String.valueOf(PROCESS_TIME))) > 0) && readyList.get(i).isIsLock()) {
-                        this.loadToBlockList(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
-                        this.loadToWakeUpList(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
-                        this.loadToReadyQueue(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isIsLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
+                    if ((readyList.get(i).getTime().compareTo(new BigInteger(String.valueOf(PROCESS_TIME))) > 0) && !readyList.get(i).isLock()) {
+                        this.loadToExpirationTimeQueue(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
+                        this.loadToReadyQueue(new Process(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended())));
+                    } else if ((readyList.get(i).getTime().compareTo(new BigInteger(String.valueOf(PROCESS_TIME))) > 0) && readyList.get(i).isLock()) {
+                        this.loadToBlockList(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
+                        this.loadToWakeUpList(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
+                        this.loadToReadyQueue(new Process(readyList.get(i).getName(), this.consumeTimeProcess(readyList.get(i)), readyList.get(i).isLock(), readyList.get(i).getPriority(), readyList.get(i).isSuspended()));
                     }else {
-                        this.loadToFinishedQueue(new Process(readyList.get(i).getName(), new BigInteger("0"), readyList.get(i).isIsLock(), new BigInteger(String.valueOf(readyList.get(i).getPriority())), readyList.get(i).isSuspended()));
+                        this.loadToFinishedQueue(new Process(readyList.get(i).getName(), new BigInteger("0"), readyList.get(i).isLock(), new BigInteger(String.valueOf(readyList.get(i).getPriority())), readyList.get(i).isSuspended()));
                     }
                 }
                 else
@@ -119,8 +133,16 @@ public class ProcessManager {
             }
         }
 
+    }
 
+    public Process searchProcessByName(String nameProcess){
+        for(int i = 0; i < queueList.size(); i++){
+            if(queueList.get(i).getName().equals(nameProcess)){
+                return queueList.get(i);
+            }
 
+        }
+        return null;
     }
 
     private void cleanAllLists(){
@@ -228,7 +250,54 @@ public class ProcessManager {
         return (ArrayList<Process>) this.restartedList;
     }
 
+    public String[] getProcessNameAsArray(){
+        String[] queueListAsArray = new String[queueList.size()];
+        for(int i = 0; i < queueListAsArray.length; i++){
+            queueListAsArray[i] = queueList.get(i).getName();
+        }
+        return  queueListAsArray;
+    }
+
+    public boolean existRelation(Process processOne, Process processTwo){
+        for(int i = 0; i < relationList.size(); i++){
+            if((relationList.get(i).get(0).equals(processOne) && relationList.get(i).get(1).equals(processTwo))
+            || (relationList.get(i).get(0).equals(processTwo) && relationList.get(i).get(1).equals(processOne))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addRelation(Process processOne, Process processTwo){
+        ArrayList<Process> listProcess = new ArrayList<>();
+        listProcess.add(processOne);
+        listProcess.add(processTwo);
+        this.relationList.add(listProcess);
+    }
+
+    public boolean hasRelation(Process process){
+        for(int i = 0; i < relationList.size(); i++){
+            if(relationList.get(i).get(0).getName().equals(process.getName()) || relationList.get(i).get(1).getName().equals(process.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void cleanQueueList(){
         queueList.clear();
+    }
+
+    public void deleteRelation(int indexRelation) {
+        relationList.remove(indexRelation);
+    }
+
+    public void updateRelation(String currentName, String modifyNameProcess) {
+        for(int i = 0; i < relationList.size(); i++){
+            if(relationList.get(i).get(0).getName().equals(currentName))
+                relationList.get(i).get(0).setName(modifyNameProcess);
+            else if(relationList.get(i).get(1).getName().equals(currentName))
+                relationList.get(i).get(1).setName(modifyNameProcess);
+        }
     }
 }
