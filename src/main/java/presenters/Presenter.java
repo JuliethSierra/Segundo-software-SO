@@ -110,6 +110,9 @@ public class Presenter implements ActionListener, KeyListener {
             case "Reanudados":
                 this.showRestartedReportProcessReport();
                 break;
+            case "RelacionadosReport":
+                this.showRelatedProcessReport();
+                break;
             case "ManualUsuario":
                 this.showUserManual();
                 break;
@@ -198,6 +201,7 @@ public class Presenter implements ActionListener, KeyListener {
         viewManager.changeToMainMenu();
         viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
         viewManager.showTableProcessPanel();
+        processManager.cleanReportsList();
     }
     
     private void showReadyReport(){
@@ -231,6 +235,7 @@ public class Presenter implements ActionListener, KeyListener {
     }
 
     private void showDestroyedProcessReport(){
+        System.out.println(processManager.getDestroyedList());
         viewManager.showDestroyedProcessReport(processManager.getListAsMatrixObject(processManager.getDestroyedList()));
     }
 
@@ -240,6 +245,11 @@ public class Presenter implements ActionListener, KeyListener {
 
     private void showRestartedReportProcessReport(){
         viewManager.showRestartedReportProcessReport(processManager.getListAsMatrixObject(processManager.getRestartedList()));
+    }
+
+    private void showRelatedProcessReport(){
+        viewManager.setRelationsReport((processManager.getRelationsAsMatrixObject()));
+        viewManager.showRelationsReport();
     }
 
     private void showUserManual(){
@@ -297,6 +307,7 @@ public class Presenter implements ActionListener, KeyListener {
                 if(confirmation == 0){
                     processManager.deleteProcess(viewManager.getIndexDataProcess());
                     viewManager.setValuesToTableProcessInQueue(processManager.getListAsMatrixObject(processManager.getQueueList()));
+
                 }
             }
         }

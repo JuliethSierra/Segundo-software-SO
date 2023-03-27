@@ -44,6 +44,7 @@ public class ViewManager extends JFrame{
     private PanelRestartedReport panelRestartedReport;
     private JDCreateRelation jdCreateRelation;
     private RelatedProcess relatedProcess;
+    private RelatedProcessReport relatedProcessReport;
     
     public ViewManager(ActionListener listener, KeyListener keyListener){
         this.setLayout(new BorderLayout());
@@ -83,6 +84,7 @@ public class ViewManager extends JFrame{
         panelRestartedReport = new PanelRestartedReport();
         jdCreateRelation = new JDCreateRelation(listener);
         relatedProcess = new RelatedProcess();
+        relatedProcessReport = new RelatedProcessReport();
     }
 
 
@@ -258,6 +260,7 @@ public class ViewManager extends JFrame{
         this.panelRestartedReport.setVisible(false);
         this.jdCreateRelation.setVisible(false);
         this.relatedProcess.setVisible(false);
+        this.relatedProcessReport.setVisible(false);
         SwingUtilities.updateComponentTreeUI(this);
     }
     public void showModifyProcessPanel(){
@@ -367,7 +370,22 @@ public class ViewManager extends JFrame{
         SwingUtilities.updateComponentTreeUI(this);
     }
 
+    public void showRelationsReport(){
+        this.relatedProcess.setVisible(true);
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+
     public void setRelations(Object[][] relationsAsMatrixObject) {
+        DefaultTableModel defaultTableModel = new DefaultTableModel(relationsAsMatrixObject, this.HEADERS_RELATED_TABLE);
+        this.relatedProcess.setTableProcess(defaultTableModel);
+        this.hideAllPanels();
+        this.relatedProcess.setVisible(true);
+        add(relatedProcess, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(this);
+
+    }
+
+    public void setRelationsReport(Object[][] relationsAsMatrixObject) {
         DefaultTableModel defaultTableModel = new DefaultTableModel(relationsAsMatrixObject, this.HEADERS_RELATED_TABLE);
         this.relatedProcess.setTableProcess(defaultTableModel);
         this.hideAllPanels();

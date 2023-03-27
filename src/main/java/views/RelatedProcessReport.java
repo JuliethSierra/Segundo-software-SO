@@ -5,14 +5,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class RelatedProcess extends JPanel {
+public class RelatedProcessReport extends JPanel {
 
     private DefaultTableModel modelTableReport;
     private JTable tableProcessReport;
     private JScrollPane scrollReport;
 
 
-    public RelatedProcess(){
+    public RelatedProcessReport(){
         initComponents();
         setVisible(true);
     }
@@ -50,7 +50,4 @@ public class RelatedProcess extends JPanel {
     }
 
 
-    public int getIndexRelation() {
-        return this.tableProcessReport.getSelectedRow();
-    }
 }
